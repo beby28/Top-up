@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOPUPKU - Tempat Top Up Game Termurah</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#020617;color:#fff;min-height:100vh}
+.topbar{background:#04110f;padding:8px 16px;font-size:12px;color:#94a3b8;display:flex;justify-content:space-between}
+.header{background:#022c22;padding:12px 16px;display:flex;gap:12px;align-items:center;position:sticky;top:0;z-index:20}
+.logo{font-size:24px;font-weight:900;white-space:nowrap}.logo span{color:#22c55e}
+.search{flex:1;background:#fff;border-radius:25px;display:flex;overflow:hidden}
+.search input{flex:1;border:none;padding:11px 14px;outline:none;color:#111;background:transparent}
+.search button{border:none;background:#22c55e;color:#fff;padding:0 16px;font-weight:800;cursor:pointer}
+.icon-btn{background:#064e3b;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0}
+.container{max-width:1100px;margin:auto;padding:14px}
+.banner{background:linear-gradient(135deg,#16a34a,#14532d);border-radius:18px;padding:22px;display:flex;gap:14px;align-items:center}
+.banner h1{font-size:26px;line-height:1.2}.banner p{opacity:.9;font-size:13px;margin:8px 0 12px}
+.btn{padding:12px 18px;border:none;border-radius:10px;cursor:pointer;font-weight:800;width:100%}
+.btn-green{background:#22c55e;color:#fff}.btn-yellow{background:#f59e0b;color:#fff}.btn-red{background:#ef4444;color:#fff}.btn-blue{background:#2563eb;color:#fff}
+.chip{background:#0f2a2e;border:1px solid #164e4a;padding:8px 12px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip.active{background:#22c55e;color:#fff}
+.scroll{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
+.game-card{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;overflow:hidden;cursor:pointer}
+.game-card img{width:100%;height:130px;object-fit:cover}
+.game-card .in{padding:10px}
+.tag{background:#22c55e;color:#fff;font-size:11px;padding:3px 7px;border-radius:20px}.tag-red{background:#ef4444}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#020617;color:#fff;margin:8px 0;outline:none;transition:.2s}
+input.error{border-color:#ef4444 !important;box-shadow:0 0 0 2px rgba(239,68,68,.3)}
+.nominal{background:#0f2a2e;border:2px solid #1e4a4a;padding:12px;border-radius:12px;cursor:pointer;text-align:center}
+.nominal.active{border-color:#22c55e;background:#14532d}
+.pay{border:2px solid #1e4a4a;border-radius:12px;padding:10px 12px;display:flex;gap:12px;align-items:center;cursor:pointer;background:#0f2a2e}
+.pay.active{border-color:#22c55e;background:#14532d}
+.pay img{background:#fff !important;border:1px solid #ddd;border-radius:8px;flex-shrink:0}
+.hidden{display:none}.badge{background:#22c55e;color:#fff;padding:3px 8px;border-radius:20px;font-size:12px}.small{font-size:13px;color:#94a3b8}.flex{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.auth-box{max-width:420px;margin:30px auto;background:#0f172a;padding:28px;border-radius:20px;border:1px solid #1e293b}
+.link{color:#22c55e;cursor:pointer;font-weight:700}.eye{position:absolute;right:12px;top:20px;cursor:pointer}.wrap{position:relative}
+.profil-head{background:linear-gradient(135deg,#16a34a,#14532d,#0ea5e9);border-radius:20px;padding:26px 18px 20px;text-align:center;position:relative;overflow:hidden}
+.profil-head::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.25),transparent 60%)}
+.profil-avatar{width:92px;height:92px;border-radius:50%;background:#fff;color:#14532d;font-size:36px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:4px solid rgba(255,255,255,.4);position:relative;z-index:2;box-shadow:0 8px 20px rgba(0,0,0,.3);cursor:pointer;overflow:hidden;object-fit:cover}
+.profil-avatar img{width:100%;height:100%;object-fit:cover}
+.kamera-btn{position:absolute;bottom:2px;right:calc(50% - 46px);width:30px;height:30px;background:#22c55e;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:3;cursor:pointer}
+.profil-stat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+.profil-stat div{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:14px;padding:12px 6px;text-align:center}
+.profil-stat b{font-size:18px;color:#22c55e;display:block}
+.profil-stat span{font-size:11px;color:#94a3b8}
+.profil-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid #1e293b;font-size:14px}
+.profil-row span:last-child{font-weight:700;text-align:right}
+.menu-item{display:flex;gap:12px;align-items:center;padding:14px;background:#0f2a2e;border:1px solid #1e4a4a;border-radius:14px;margin-bottom:10px;cursor:pointer;font-weight:600}
+.menu-item small{display:block;font-weight:400;color:#94a3b8;font-size:12px}
+.menu-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+#toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,100px);background:#111827;border:1px solid #334155;color:#fff;padding:14px 20px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:.35s cubic-bezier(.2,.9,.3,1.2);max-width:90%;text-align:center}
+#toast.show{transform:translate(-50%,0);opacity:1}
+#toast.success{border-color:#22c55e;background:#052e16}
+#toast.error{border-color:#ef4444;background:#450a0a}
+#toast.info{border-color:#0ea5e9;background:#082f49}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.shake{animation:shake .4s ease}
+@keyframes gantiWarna{0%{background:#22c55e;box-shadow:0 0 20px rgba(34,197,94,.7)}20%{background:#16a34a;box-shadow:0 0 20px rgba(22,163,74,.7)}40%{background:#0ea5e9;box-shadow:0 0 20px rgba(14,165,233,.7)}60%{background:#8b5cf6;box-shadow:0 0 20px rgba(139,92,246,.7)}80%{background:#f59e0b;box-shadow:0 0 20px rgba(245,158,11,.7)}100%{background:#22c55e;box-shadow:0 0 20px rgba(34,197,94,.7)}}
+@keyframes kilauLewat{0%{left:-100%}100%{left:120%}}
+@keyframes goyangDikit{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.btn-masuk{background:#22c55e;color:#fff;animation:gantiWarna 4s linear infinite,goyangDikit 2s ease-in-out infinite;position:relative;overflow:hidden;font-size:16px;letter-spacing:1px}
+.btn-masuk:active{transform:scale(.96)}
+.btn-masuk::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:kilauLewat 2s ease-in-out infinite}
+.sukses-page{background:#020617;min-height:100vh;padding-bottom:80px;overflow:hidden;position:relative}
+.sukses-top{background:#22c55e;text-align:center;padding:35px 20px 30px;position:relative;overflow:hidden}
+.sukses-top::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+@keyframes popIn{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.25) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@keyframes bounceCheck{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes progressFill{from{width:0}to{width:100%}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 12px rgba(245,158,11,.18),0 0 0 24px rgba(245,158,11,.08)}50%{box-shadow:0 0 0 16px rgba(245,158,11,.25),0 0 0 32px rgba(245,158,11,.12)}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(650px) rotate(720deg);opacity:0}}
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.check-wrap{width:90px;height:90px;background:#f59e0b;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:45px;color:#fff;position:relative;z-index:2;animation:popIn .6s ease forwards,pulseGlow 1.6s ease-in-out infinite 0.6s}
+.check-wrap span{display:inline-block;animation:bounceCheck .5s ease .7s 2}
+.sukses-top h1{font-size:28px;animation:fadeUp .6s ease .2s both}
+.sukses-top p{opacity:.9;margin-top:6px;font-size:14px;animation:fadeUp .6s ease .35s both}
+.confetti{position:absolute;top:0;width:10px;height:14px;border-radius:2px;z-index:1;animation:confettiFall 2.2s ease-in forwards;pointer-events:none}
+.progress-box{padding:22px 20px;animation:fadeUp .5s ease .4s both}
+.progress-line{display:flex;align-items:center;justify-content:space-between;position:relative}
+.progress-line::before{content:'';position:absolute;left:20px;right:20px;top:22px;height:4px;background:#1e293b;z-index:0}
+.progress-fill{position:absolute;left:20px;top:22px;height:4px;background:#22c55e;z-index:0;border-radius:10px;animation:progressFill 1.2s ease .8s both}
+.p-step{width:46px;height:46px;border-radius:50%;background:#020617;border:2px solid #334155;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:1;opacity:.4;transform:scale(.8)}
+.p-step.active{border-color:#22c55e;opacity:1;transform:scale(1);transition:.4s}
+.p-step.done{background:#22c55e;border-color:#22c55e;color:#fff;opacity:1;transform:scale(1);transition:.4s}
+.sukses-card{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;padding:16px;margin:0 16px 14px;display:flex;gap:14px;align-items:center;animation:fadeUp .5s ease .6s both}
+.sukses-card img{width:105px;height:105px;border-radius:12px;object-fit:cover}
+.sukses-harga{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;padding:18px;margin:0 16px;animation:fadeUp .5s ease .8s both}
+.sukses-harga .row{display:flex;justify-content:space-between;padding:7px 0;font-size:15px}
+.row.total{border-top:1px solid #1e4a4a;margin-top:8px;padding-top:12px;font-weight:800}
+.total-anim{background:linear-gradient(90deg,#22c55e,#f59e0b,#22c55e);background-size:200px 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 1.5s linear infinite}
+.btn-anim{animation:fadeUp .5s ease 1s both}
+.verified-anim{animation:slideIn .5s ease 1.1s both}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<input type="file" id="inputFoto" accept="image/*" style="display:none" onchange="gantiFotoProfil(event)">
+<div class="topbar"><span>📞 CS 0851-3554-6055 | 24 Jam Online</span><span id="topUser">Masuk / Daftar</span></div>
+
+<!-- LOGIN -->
+<div id="page-login"><div class="auth-box" style="text-align:center"><h1 style="font-size:34px">TOP<span style="color:#22c55e">UP</span>KU</h1><p class="small" style="margin:8px 0">Top Up Game Termurah, Cepat & Terpercaya</p><div style="text-align:left"><label>Username</label><input id="loginUser" placeholder="Username"><label>Password</label><div class="wrap"><input id="loginPass" type="password" placeholder="Password"><span class="eye" onclick="togglePass('loginPass')">👁️</span></div></div><div id="loginError" class="hidden" style="background:#450a0a;border:1px solid #ef4444;color:#fca5a5;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;text-align:left">❌ Username atau password salah! Coba lagi ya.</div><div style="text-align:right;margin-top:6px"><span class="link" onclick="showPage('page-lupa')">Lupa Sandi?</span></div><button class="btn btn-masuk" style="margin-top:10px" onclick="doLogin()">MASUK ✨</button><p class="small" style="margin-top:12px">Belum punya akun? <span class="link" onclick="showPage('page-daftar')">Buat Akun</span></p></div></div>
+<div id="page-daftar" class="hidden"><div class="auth-box"><h2 style="text-align:center">Buat Akun ✨</h2><label>Nama</label><input id="regNama" placeholder="Budi Santoso"><label>Username</label><input id="regUser" placeholder="budi123"><label>WA</label><input id="regWa" placeholder="08xxxxxxxxxx"><label>Password</label><input id="regPass" type="password"><label>Ulangi</label><input id="regPass2" type="password"><button class="btn btn-masuk" onclick="doDaftar()">DAFTAR ✨</button><p class="small" style="text-align:center;margin-top:10px">Sudah punya akun? <span class="link" onclick="showPage('page-login')">Login</span></p></div></div>
+<div id="page-lupa" class="hidden"><div class="auth-box"><h2 style="text-align:center">Lupa Sandi? 🔑</h2><div id="lupa-step1"><label>Username</label><input id="lupaUser"><button class="btn btn-masuk" onclick="cekUserLupa()">CEK AKUN</button></div><div id="lupa-step2" class="hidden"><p>Akun: <b id="lupaNama"></b></p><label>Password Baru</label><input id="lupaPassBaru" type="password"><label>Ulangi</label><input id="lupaPassBaru2" type="password"><button class="btn btn-masuk" onclick="gantiPass()">GANTI</button></div><p class="small" style="text-align:center;margin-top:10px"><span class="link" onclick="showPage('page-login')">Kembali</span></p></div></div>
+
+<!-- HOME -->
+<div id="page-home" class="hidden">
+  <div class="header"><div class="logo">TOP<span>UP</span>KU</div><div class="search"><input id="cariGame" placeholder="Cari game... Mobile Legends, Free Fire" oninput="filterGame()"><button onclick="filterGame()">🔍</button></div><div class="icon-btn" onclick="showPage('page-riwayat')">🧾</div><div class="icon-btn" onclick="bukaProfil()">👤</div></div>
+  <div class="container">
+    <div class="banner"><div style="flex:1"><span class="tag">🔥 PROMO HARI INI</span><h1>Top Up Game<br>Paling Murah & Cepat!</h1><p>Diskon up to 30% • Proses 1-5 Menit • Bayar QRIS / DANA / OVO / GOPAY / TRANSFER BANK BCA / CASH</p><button class="btn btn-yellow" style="width:auto" onclick="document.getElementById('listGame').scrollIntoView({behavior:'smooth'})">TOP UP SEKARANG →</button></div><div style="font-size:70px">🎮</div></div>
+    <div class="scroll" id="kategoriList"><div class="chip active" onclick="filterKategori('Semua',this)">Semua</div><div class="chip" onclick="filterKategori('Top Up Game',this)">🎮 Top Up Game</div></div>
+    <h3 style="margin:10px 0" id="listGame">Populer Hari Ini</h3><div class="grid" id="gameList"></div>
+    <div class="card"><div class="flex"><h3>🧾 Riwayat Terakhir</h3><button class="btn btn-red" style="width:auto;padding:8px 12px;font-size:13px" onclick="hapusSemuaRiwayat()">🗑️ Hapus Semua</button></div><div id="riwayatHome" style="margin-top:10px" class="small">Belum ada pesanan.</div></div>
+  </div>
+</div>
+
+<!-- PROFIL -->
+<div id="page-profil" class="hidden">
+  <div class="header"><div class="icon-btn" onclick="showPage('page-home')">←</div><b>Profil Saya</b><div style="flex:1"></div><div class="icon-btn" onclick="showPage('page-home')">🏠</div></div>
+  <div class="container">
+    <div class="profil-head">
+      <div style="position:relative;width:92px;margin:0 auto">
+        <div class="profil-avatar" id="profilAvatar" onclick="document.getElementById('inputFoto').click()">B</div>
+        <div class="kamera-btn" onclick="document.getElementById('inputFoto').click()">📷</div>
+      </div>
+      <p class="small" style="color:#fff;opacity:.8;position:relative;z-index:2;margin-bottom:8px">Tap foto untuk ganti foto profil</p>
+      <b id="profilNama" style="font-size:22px;position:relative;z-index:2">Budi Santoso</b><br>
+      <span id="profilUsername" style="opacity:.85;position:relative;z-index:2">@budi123 • Member VIP 👑</span><br>
+      <span style="background:rgba(0,0,0,.25);padding:4px 12px;border-radius:20px;font-size:12px;position:relative;z-index:2;display:inline-block;margin-top:8px">✅ Akun Terverifikasi</span>
+    </div>
+    <div class="profil-stat">
+      <div><b id="statTransaksi">0</b><span>Transaksi</span></div>
+      <div><b id="statTotal">Rp 0</b><span>Total Belanja</span></div>
+      <div><b id="statLevel">Bronze</b><span>Level Member</span></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:6px">📋 Data Akun</h3>
+      <div class="profil-row"><span>👤 Nama Lengkap</span><span id="profilNama2">-</span></div>
+      <div class="profil-row"><span>🆔 Username</span><span id="profilUser2">-</span></div>
+      <div class="profil-row"><span>📱 No. WhatsApp</span><span id="profilWa">-</span></div>
+      <div class="profil-row"><span>📅 Bergabung</span><span id="profilJoin">Hari Ini</span></div>
+      <div class="profil-row" style="border:none"><span>⭐ Status</span><span style="color:#22c55e">Aktif • VIP</span></div>
+    </div>
+    <div class="menu-item" onclick="showPage('page-riwayat')"><div class="menu-icon" style="background:#1e3a8a">🧾</div><div style="flex:1">Riwayat Pesanan<small id="profilRiwayatText">Lihat semua transaksi kamu</small></div><span>›</span></div>
+    <div class="menu-item" onclick="editProfil()"><div class="menu-icon" style="background:#14532d">✏️</div><div style="flex:1">Edit Profil<small>Ubah nama & nomor WA</small></div><span>›</span></div>
+    <div class="menu-item" onclick="hubungiCS()"><div class="menu-icon" style="background:#25D366">💬</div><div style="flex:1">Hubungi CS<small>Chat WhatsApp • Online 24 jam</small></div><span>›</span></div>
+    <div id="editBox" class="card hidden"><h3>✏️ Edit Profil</h3><label>Nama Lengkap</label><input id="editNama"><label>No. WhatsApp</label><input id="editWa"><button class="btn btn-masuk" onclick="simpanProfil()">SIMPAN PERUBAHAN ✅</button><button class="btn btn-red" style="margin-top:8px" onclick="hapusFotoProfil()">HAPUS FOTO PROFIL 🗑️</button></div>
+    <button class="btn btn-red" onclick="logout()">KELUAR DARI AKUN 🚪</button>
+    <p class="small" style="text-align:center;margin-top:12px">TOPUPKU v1.0 • Dibuat untuk Gamer Indonesia 🇮🇩</p>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div id="page-detail" class="hidden">
+  <div class="header"><div class="icon-btn" onclick="showPage('page-home')">←</div><div class="logo" style="font-size:18px">TOP<span>UP</span>KU</div><div style="flex:1"></div><div class="icon-btn" onclick="showPage('page-riwayat')">🧾</div></div>
+  <div class="container">
+    <div class="card" style="display:flex;gap:14px"><img id="dImg" style="width:100px;height:100px;border-radius:12px;object-fit:cover"><div><b id="dNama" style="font-size:20px">Mobile Legends</b><p class="small" id="dDesc">Top Up Diamond ML</p><p style="margin-top:6px"><span class="tag">🔥 Terlaris</span> <span class="tag tag-red">Diskon 10%</span> <span class="small">• ⭐ 4.9</span></p></div></div>
+    <div class="card"><h3>1. Masukkan ID Game</h3><input id="idGame" placeholder="User ID: 123456789"><input id="serverGame" placeholder="Server / Zone ID (opsional)"></div>
+    <div class="card"><h3>2. Pilih Nominal</h3><div class="grid" id="nominalList" style="margin-top:10px"></div></div>
+    <div class="card"><h3>3. Pembayaran</h3><div id="payList" style="display:grid;gap:10px;margin-top:10px"></div><div class="flex" style="margin-top:14px"><b>Total: <span id="totalHarga" style="color:#22c55e">Rp 0</span></b><button class="btn btn-masuk" style="width:auto" onclick="checkout()">BELI SEKARANG 💸</button></div></div>
+  </div>
+</div>
+
+<!-- RIWAYAT -->
+<div id="page-riwayat" class="hidden"><div class="header"><div class="icon-btn" onclick="showPage('page-home')">←</div><b>Riwayat Pesanan</b><div style="flex:1"></div></div><div class="container"><div class="card"><div id="riwayat">Belum ada pesanan.</div></div></div></div>
+
+<!-- INVOICE - MUNCUL SETELAH BELI, SEBELUM SUKSES -->
+<div id="page-invoice" class="hidden">
+  <div style="background:#f59e0b;color:#111;text-align:center;padding:28px 16px 20px">
+    <div style="font-size:50px">⏳</div>
+    <h2 style="font-size:24px">Menunggu Pembayaran</h2>
+    <p style="font-size:13px;opacity:.8">Silakan lakukan pembayaran dengan metode yang kamu pilih.</p>
+  </div>
+  <div class="container" style="padding-bottom:40px">
+    <div class="card" style="margin-top:-10px">
+      <h3>Progress Transaksi</h3>
+      <div class="progress-line" style="margin-top:14px"><div class="progress-fill" style="width:35%"></div><div class="p-step done">🛒</div><div class="p-step done">💳</div><div class="p-step active">↻</div><div class="p-step">✓</div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-top:8px"><span>Pesanan</span><span>Bayar</span><span>Proses</span><span>Selesai</span></div>
+      <div style="background:#450a0a;border:1px solid #ef4444;text-align:center;padding:10px;border-radius:10px;margin-top:14px;font-weight:800;color:#fca5a5">⏰ <span id="invTimer">0 Jam 59 Menit 59 Detik</span></div>
+    </div>
+    <div class="card" style="display:flex;gap:14px"><img id="invImg" style="width:80px;height:80px;border-radius:12px;object-fit:cover"><div><b id="invNama" style="font-size:19px">Mobile Legends</b><br><span id="invNominal" style="color:#94a3b8">86 Diamond</span><br><span style="font-size:13px">ID <span id="invIdGame" style="color:#22c55e;font-weight:700">-</span></span></div></div>
+    <div class="card">
+      <div class="flex" style="padding:6px 0"><span>Harga</span><b id="invHarga">Rp 0</b></div>
+      <div class="flex" style="padding:6px 0"><span>Jumlah</span><b>1x</b></div>
+      <div class="flex" style="padding:6px 0"><span>Payment Fee</span><b>Rp 0</b></div>
+      <div class="flex" style="padding:6px 0;border-top:1px solid #333;margin-top:6px;padding-top:10px"><span>Total Pembayaran</span><b id="invTotal" style="color:#22c55e;font-size:18px">Rp 0</b></div>
+      <div class="flex" style="padding:6px 0"><span>Metode Pembayaran</span><b id="invBayar">QRIS</b></div>
+      <div class="flex" style="padding:6px 0"><span>Nomor Invoice</span><b id="invInvoice">YOU12345</b></div>
+      <div class="flex" style="padding:6px 0"><span>Status Pembayaran</span><b style="background:#f59e0b;color:#111;padding:3px 10px;border-radius:20px;font-size:12px">UNPAID</b></div>
+      <div class="flex" style="padding:6px 0"><span>Status Transaksi</span><b style="background:#334155;padding:3px 10px;border-radius:20px;font-size:12px">PENDING</b></div>
+      <div class="flex" style="padding:6px 0"><span>Waktu Order Dibuat</span><b id="invTanggal">-</b></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h3>Kode Pembayaran</h3>
+      <p class="small" style="margin:8px 0">Scan QR Code untuk melakukan pembayaran.</p>
+      <img id="invQrisImg" src="qris.jpg" onerror="this.src='https://via.placeholder.com/300x300/fff/111?text=QRIS+KAMU'" style="width:260px;height:260px;object-fit:contain;background:#fff;border-radius:12px;padding:10px">
+      <p class="small" style="margin-top:8px" id="invBayarInfo">Atas Nama: <b style="color:#fff">TOPUPKU</b> • Buka DANA / OVO / GoPay / m-Banking</p>
+    </div>
+    <div class="card"><h3>Instruksi Pembayaran</h3><p class="small" style="margin-top:8px;line-height:1.6">1. Buka DANA / OVO / GoPay / m-Banking<br>2. Scan QR Code di atas<br>3. Bayar sesuai Total Pembayaran<br>4. Screenshot bukti bayar<br>5. Klik tombol Saya Sudah Bayar</p></div>
+    <button class="btn btn-masuk" onclick="sudahBayarInvoice()">SAYA SUDAH BAYAR ✅</button>
+    <button class="btn btn-red" style="margin-top:10px" onclick="showPage('page-home')">KEMBALI KE HOME</button>
+  </div>
+</div>
+
+<!-- SUKSES -->
+<div id="page-sukses" class="hidden"><div class="sukses-page" id="suksesPage">
+  <div class="sukses-top" id="suksesTop"><div id="confettiBox"></div><div class="check-wrap"><span>✓</span></div><h1>Pembayaran Berhasil</h1><p>Transaksi telah berhasil dilakukan.</p></div>
+  <div class="progress-box"><h3>Progress Transaksi</h3><div class="progress-line"><div class="progress-fill" id="progressFill"></div><div class="p-step" id="step1">🛒</div><div class="p-step" id="step2">💳</div><div class="p-step" id="step3">↻</div><div class="p-step" id="step4">✓</div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-top:8px"><span>Pesanan</span><span>Bayar</span><span>Proses</span><span>Selesai</span></div></div>
+  <p style="padding:0 20px;color:#cbd5e1" id="suksesTanggal">19/11/2026, 07.11.23</p><br>
+  <div class="sukses-card"><img id="suksesImg" src=""><div><b id="suksesNamaProduk" style="font-size:19px">Mobile Legends</b><br><span id="suksesNominal">86 Diamond</span><br><br><span>ID</span><br><span id="suksesIdGame" style="color:#22c55e;font-weight:700">123456</span></div></div>
+  <div class="sukses-harga"><div class="row"><span>Harga</span><span id="suksesHarga">Rp 21.000</span></div><div class="row"><span>Jumlah</span><span>1x</span></div><div class="row"><span>Diskon</span><span>Rp 0</span></div><div class="row"><span>Metode Bayar</span><span id="suksesBayar">QRIS</span></div><div class="row total"><span>Total</span><b id="suksesTotal" class="total-anim">Rp 21.000</b></div><div class="row"><span>No. Invoice</span><b id="suksesInvoice">ORD12345</b></div><div class="row"><span>Status</span><b style="color:#22c55e">✅ BERHASIL</b></div></div>
+  <div class="verified-anim" style="margin:14px 16px;background:#111827;border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;font-size:13px"><img id="verifiedImg" style="width:48px;height:48px;border-radius:8px;object-fit:cover"><div><b id="verifiedNama">TOPUPKU</b><br><span style="color:#22c55e">✔️ Verified by TOPUPKU - TEMPAT BELI DIAMOND TERPERCAYA</span></div></div>
+  <div class="btn-anim" style="padding:0 16px;display:flex;gap:10px"><button class="btn btn-masuk" onclick="showPage('page-home')">KEMBALI 🏠</button><button class="btn btn-blue" onclick="showToast('Struk tersimpan! Screenshot halaman ini ya.','info')">DOWNLOAD STRUK 🧾</button></div>
+</div></div>
+
+<script>
+let users=JSON.parse(localStorage.getItem('topup_users')||'[{"nama":"Admin","user":"admin","wa":"085135546055","pass":"12345"}]');
+let currentUser=null,lastOrder=null,selGame=0,selNominal=0,selBayar='QRIS',filterKat='Semua',keyword='';
+let toastTimer;let timerInv;
+function showToast(msg,type='info'){let t=document.getElementById('toast');t.className='show '+type;t.innerHTML=(type=='success'?'✅ ':type=='error'?'❌ ':'ℹ️ ')+msg;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.className='';},2800);if(navigator.vibrate && type=='error') navigator.vibrate(120);}
+function shakeEl(id){let e=document.getElementById(id);e.classList.remove('shake','error');void e.offsetWidth;e.classList.add('shake','error');}
+const CS_WA='6285135546055';
+function hubungiCS(){let nama=currentUser?currentUser.nama:'Calon Pembeli';let pesan='Halo Admin TOPUPKU 👋%0ASaya '+encodeURIComponent(nama)+', mau tanya soal top up game dong.';window.open('https://wa.me/'+CS_WA+'?text='+pesan,'_blank');showToast('Membuka WhatsApp...','info');}
+function getFotoKey(){return 'topup_foto_'+(currentUser?currentUser.user:'tamu');}
+function tampilkanFotoProfil(){let foto=localStorage.getItem(getFotoKey());let el=document.getElementById('profilAvatar');if(foto){el.innerHTML='<img src="'+foto+'">';el.style.background='#fff';}else{el.innerHTML=(currentUser?currentUser.nama.charAt(0).toUpperCase():'B');}}
+function gantiFotoProfil(e){let file=e.target.files[0];if(!file)return;if(file.size>800000){showToast('Fotonya kegedean, pilih yang < 800KB ya!','error');return;}let reader=new FileReader();reader.onload=function(ev){let img=new Image();img.onload=function(){let c=document.createElement('canvas');let max=300;let w=img.width,h=img.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);let data=c.toDataURL('image/jpeg',0.8);localStorage.setItem(getFotoKey(),data);tampilkanFotoProfil();showToast('Foto profil berhasil diganti! 📷','success');};img.src=ev.target.result;};reader.readAsDataURL(file);e.target.value='';}
+function hapusFotoProfil(){localStorage.removeItem(getFotoKey());tampilkanFotoProfil();showToast('Foto profil dihapus, balik ke huruf awal','info');}
+let games=[
+ {nama:"Mobile Legends",kat:"Top Up Game",img:"ML.jpg",desc:"Diamond ML, Starlight",nominals:[{nama:"86 Diamond",harga:21000},{nama:"172 Diamond",harga:42000},{nama:"257 Diamond",harga:63000},{nama:"500 Diamond",harga:122000}]},
+ {nama:"Free Fire",kat:"Top Up Game",img:"ff.jpg",desc:"Diamond FF Termurah",nominals:[{nama:"70 Diamond",harga:10000},{nama:"140 Diamond",harga:20000},{nama:"355 Diamond",harga:50000},{nama:"720 Diamond",harga:99000}]},
+ {nama:"PUBG Mobile",kat:"Top Up Game",img:"pubg.jpg",desc:"UC PUBG Mobile",nominals:[{nama:"60 UC",harga:15000},{nama:"325 UC",harga:75000},{nama:"660 UC",harga:149000}]},
+ {nama:"Roblox",kat:"Top Up Game",img:"roblox.jpg",desc:"Robux via Gamepass",nominals:[{nama:"400 Robux",harga:65000},{nama:"800 Robux",harga:129000},{nama:"1700 Robux",harga:259000}]},
+ {nama:"Valorant",kat:"Top Up Game",img:"valorant.jpg",desc:"Valorant Points",nominals:[{nama:"475 VP",harga:50000},{nama:"1000 VP",harga:100000},{nama:"2050 VP",harga:195000}]},
+ {nama:"Genshin Impact",kat:"Top Up Game",img:"genshin.jpg",desc:"Genesis & Welkin",nominals:[{nama:"60 Genesis",harga:16000},{nama:"Blessing Welkin",harga:79000},{nama:"980 Genesis",harga:249000}]},
+];
+let pays=[
+  {nama:"QRIS", img:"qris.jpg", desc:"Scan QR - Otomatis"},
+  {nama:"DANA", img:"dana.jpg", desc:"Transfer DANA"},
+  {nama:"OVO", img:"ovo.jpg", desc:"Transfer OVO"},
+  {nama:"GoPay", img:"gopay.jpg", desc:"Transfer GoPay"},
+  {nama:"Transfer Bank BCA", img:"bca.jpg", desc:"BCA 1234567890"},
+  {nama:"CASH", img:"cash.jpg", desc:"Bayar Cash / Ketemu"},
+];
+let orders=JSON.parse(localStorage.getItem('orders_user')||'[]');
+function showPage(id){['page-login','page-daftar','page-lupa','page-home','page-detail','page-riwayat','page-sukses','page-profil','page-invoice'].forEach(p=>document.getElementById(p).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0);if(id=='page-home')renderHome();if(id=='page-sukses')playSuksesAnim();}
+function togglePass(id){let e=document.getElementById(id);e.type=e.type=='password'?'text':'password';}
+function saveUsers(){localStorage.setItem('topup_users',JSON.stringify(users));}
+function bukaProfil(){if(!currentUser){showToast('Login dulu ya!','error');showPage('page-login');return;}let u=currentUser;let my=orders.filter(o=>o.user==u.user);let total=my.reduce((a,b)=>a+b.harga,0);let level=total>=500000?'Diamond 💎':total>=200000?'Gold 🥇':total>=50000?'Silver 🥈':'Bronze 🥉';tampilkanFotoProfil();document.getElementById('profilNama').innerText=u.nama;document.getElementById('profilUsername').innerText='@'+u.user+' • Member VIP 👑';document.getElementById('profilNama2').innerText=u.nama;document.getElementById('profilUser2').innerText='@'+u.user;document.getElementById('profilWa').innerText=u.wa||'-';document.getElementById('profilJoin').innerText='Hari Ini • '+new Date().toLocaleDateString('id-ID');document.getElementById('statTransaksi').innerText=my.length+'x';document.getElementById('statTotal').innerText='Rp '+total.toLocaleString('id-ID');document.getElementById('statLevel').innerText=level;document.getElementById('profilRiwayatText').innerText=my.length?my.length+' transaksi • Terakhir: '+my[my.length-1].game:'Belum ada transaksi, yuk top up!';document.getElementById('editBox').classList.add('hidden');showPage('page-profil');}
+function editProfil(){document.getElementById('editBox').classList.remove('hidden');document.getElementById('editNama').value=currentUser.nama;document.getElementById('editWa').value=currentUser.wa||'';document.getElementById('editBox').scrollIntoView({behavior:'smooth'});}
+function simpanProfil(){let n=document.getElementById('editNama').value.trim(),w=document.getElementById('editWa').value.trim();if(!n||!w){showToast('Isi nama & WA dulu!','error');return;}let i=users.findIndex(x=>x.user==currentUser.user);users[i].nama=n;users[i].wa=w;currentUser.nama=n;currentUser.wa=w;saveUsers();document.getElementById('topUser').innerText='Halo, '+n+' 👋';showToast('Profil berhasil diupdate!','success');bukaProfil();}
+function masukTamu(){currentUser={nama:"Tamu",user:"tamu"};document.getElementById('topUser').innerText="Halo, Tamu 👋";showPage('page-home');renderHome();}
+function doDaftar(){let n=document.getElementById('regNama').value.trim(),u=document.getElementById('regUser').value.trim().toLowerCase(),w=document.getElementById('regWa').value.trim(),p1=document.getElementById('regPass').value,p2=document.getElementById('regPass2').value;if(!n||!u||!w||!p1){showToast('Isi semua kolom dulu ya!','error');return;}if(p1.length<4){showToast('Password minimal 4 karakter!','error');return;}if(p1!==p2){showToast('Password tidak sama!','error');return;}if(users.find(x=>x.user==u)){showToast('Username sudah dipakai!','error');return;}users.push({nama:n,user:u,wa:w,pass:p1});saveUsers();showToast('Akun berhasil dibuat! Silakan login.','success');showPage('page-login');document.getElementById('loginUser').value=u;}
+function doLogin(){let u=document.getElementById('loginUser').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;let f=users.find(x=>x.user==u&&x.pass==p);if(!f){document.getElementById('loginError').classList.remove('hidden');shakeEl('loginUser');shakeEl('loginPass');showToast('Username atau password salah!','error');return;}document.getElementById('loginError').classList.add('hidden');currentUser=f;document.getElementById('topUser').innerText='Halo, '+f.nama+' 👋';showToast('Selamat datang, '+f.nama+'!','success');showPage('page-home');renderHome();}
+function cekUserLupa(){let u=document.getElementById('lupaUser').value.trim().toLowerCase();let f=users.find(x=>x.user==u);if(!f){showToast('Username tidak ditemukan!','error');return;}document.getElementById('lupa-step1').classList.add('hidden');document.getElementById('lupa-step2').classList.remove('hidden');document.getElementById('lupaNama').innerText=f.nama;}
+function gantiPass(){let u=document.getElementById('lupaUser').value.trim().toLowerCase(),p1=document.getElementById('lupaPassBaru').value,p2=document.getElementById('lupaPassBaru2').value;if(p1.length<4){showToast('Password minimal 4 karakter!','error');return;}if(p1!==p2){showToast('Password tidak sama!','error');return;}let i=users.findIndex(x=>x.user==u);users[i].pass=p1;saveUsers();showToast('Password berhasil diganti!','success');showPage('page-login');}
+function logout(){location.reload();}
+function filterKategori(k,el){filterKat=k;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(el)el.classList.add('active');renderHome();}
+function filterGame(){keyword=document.getElementById('cariGame').value.toLowerCase();renderHome();}
+function renderHome(){let list=games.filter(g=>(filterKat=='Semua'||g.kat==filterKat)&&g.nama.toLowerCase().includes(keyword));document.getElementById('gameList').innerHTML=list.map((g,i)=>{let idx=games.indexOf(g);return `<div class="game-card" onclick="bukaDetail(${idx})"><img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x200/22c55e/fff?text=${encodeURIComponent(g.nama)}'"><div class="in"><b>${g.nama}</b><br><span>${g.desc}</span><br><span style="color:#22c55e;font-weight:700">Mulai Rp ${g.nominals[0].harga.toLocaleString('id-ID')}</span> <span class="tag">Promo</span></div></div>`}).join('');renderRiwayat();let my=orders.filter(o=>o.user==(currentUser?currentUser.user:'tamu'));document.getElementById('riwayatHome').innerHTML=my.length?my.slice(-2).reverse().map(o=>`• ${o.game} - ${o.nominal} - Rp ${o.harga.toLocaleString('id-ID')} ✅`).join('<br>'):'Belum ada pesanan.';}
+function bukaDetail(i){selGame=i;selNominal=0;selBayar='QRIS';let g=games[i];document.getElementById('dImg').src=g.img;document.getElementById('dNama').innerText=g.nama;document.getElementById('dDesc').innerText=g.desc;renderDetail();showPage('page-detail');}
+function renderDetail(){let g=games[selGame];document.getElementById('nominalList').innerHTML=g.nominals.map((n,i)=>`<div class="nominal ${i==selNominal?'active':''}" onclick="pilihNominal(${i})"><b>${n.nama}</b><br>Rp ${n.harga.toLocaleString('id-ID')}</div>`).join('');document.getElementById('payList').innerHTML=pays.map(p=>`<div class="pay ${p.nama==selBayar?'active':''}" onclick="pilihBayar('${p.nama}')"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/120x60/ffffff/111111?text=${encodeURIComponent(p.nama)}'" style="width:64px;height:38px;object-fit:contain;padding:4px"><div style="flex:1"><b>${p.nama}</b><br><span class="small">${p.desc||''}</span></div><span style="font-size:20px">${p.nama==selBayar?'✅':'○'}</span></div>`).join('');document.getElementById('totalHarga').innerText='Rp '+g.nominals[selNominal].harga.toLocaleString('id-ID');}
+function pilihNominal(i){selNominal=i;renderDetail();}
+function pilihBayar(n){selBayar=n;renderDetail();}
+// === BARU: BELI -> INVOICE QRIS DULU, BUKAN LANGSUNG SUKSES ===
+function checkout(){
+  let id=document.getElementById('idGame').value;
+  if(!id){showToast('Isi ID Game dulu ya!','error');shakeEl('idGame');return;}
+  let g=games[selGame],n=g.nominals[selNominal];
+  let invoice='YOU'+Date.now().toString().slice(-6);
+  lastOrder={id:invoice,user:currentUser?currentUser.user:'tamu',nama:currentUser?currentUser.nama:'Tamu',game:g.nama,img:g.img,nominal:n.nama,idGame:id,server:document.getElementById('serverGame').value||'-',bayar:selBayar,harga:n.harga,tanggal:new Date().toLocaleString('id-ID'),status:'PENDING'};
+  document.getElementById('invImg').src=g.img;
+  document.getElementById('invNama').innerText=g.nama;
+  document.getElementById('invNominal').innerText=n.nama;
+  document.getElementById('invIdGame').innerText=id;
+  document.getElementById('invHarga').innerText='Rp '+n.harga.toLocaleString('id-ID');
+  document.getElementById('invTotal').innerText='Rp '+n.harga.toLocaleString('id-ID');
+  document.getElementById('invBayar').innerText=selBayar;
+  document.getElementById('invInvoice').innerText=invoice;
+  document.getElementById('invTanggal').innerText=lastOrder.tanggal;
+  if(selBayar=='QRIS'){document.getElementById('invBayarInfo').innerHTML='Atas Nama: <b style="color:#fff">TOPUPKU</b> • Buka DANA / OVO / GoPay / m-Banking';}
+  else if(selBayar=='DANA'){document.getElementById('invBayarInfo').innerHTML='Transfer ke DANA: <b style="color:#fff">0851-3554-6055</b> a.n TOPUPKU - atau scan QR di atas';}
+  else if(selBayar=='Transfer Bank BCA'){document.getElementById('invBayarInfo').innerHTML='Transfer ke BCA: <b style="color:#fff">1234567890</b> a.n TOPUPKU';}
+  else {document.getElementById('invBayarInfo').innerHTML='Bayar via <b style="color:#fff">'+selBayar+'</b> - Scan QR di atas / hubungi WA';}
+  showPage('page-invoice');
+  let s=3600; clearInterval(timerInv);
+  timerInv=setInterval(()=>{
+    s--; let h=Math.floor(s/3600), m=Math.floor((s%3600)/60), d=s%60;
+    document.getElementById('invTimer').innerText=h+' Jam '+m+' Menit '+d+' Detik';
+    if(s<=0){clearInterval(timerInv);showToast('Waktu bayar habis!','error');showPage('page-home');}
+  },1000);
+}
+function sudahBayarInvoice(){
+  clearInterval(timerInv);
+  lastOrder.status='Berhasil';
+  orders.push(lastOrder);
+  localStorage.setItem('orders_user',JSON.stringify(orders));
+  renderRiwayat(); isiSukses(lastOrder); showPage('page-sukses');
+  let pesan=`Halo Admin TOPUPKU, saya SUDAH BAYAR ✅%0AInvoice: ${lastOrder.id}%0AGame: ${lastOrder.game} - ${lastOrder.nominal}%0AID Game: ${lastOrder.idGame}%0ATotal: Rp ${lastOrder.harga.toLocaleString('id-ID')}%0ASaya kirim bukti di bawah ini ya!`;
+  window.open('https://wa.me/'+CS_WA+'?text='+pesan,'_blank');
+}
+function isiSukses(o){document.getElementById('suksesTanggal').innerText=o.tanggal;document.getElementById('suksesImg').src=o.img;document.getElementById('verifiedImg').src=o.img;document.getElementById('suksesNamaProduk').innerText=o.game;document.getElementById('suksesNominal').innerText=o.nominal;document.getElementById('suksesIdGame').innerText='ID: '+o.idGame+' • '+o.nama;document.getElementById('suksesHarga').innerText='Rp '+o.harga.toLocaleString('id-ID');document.getElementById('suksesBayar').innerText=o.bayar;document.getElementById('suksesTotal').innerText='Rp '+o.harga.toLocaleString('id-ID');document.getElementById('suksesInvoice').innerText=o.id;document.getElementById('verifiedNama').innerText=o.game;}
+function playSuksesAnim(){['step1','step2','step3','step4'].forEach(s=>{document.getElementById(s).classList.remove('done','active')});let fill=document.getElementById('progressFill'); fill.style.animation='none'; void fill.offsetWidth; fill.style.animation='';let box=document.getElementById('confettiBox'); box.innerHTML='';let colors=['#f59e0b','#22c55e','#3b82f6','#ef4444','#eab308','#a78bfa','#fff'];for(let i=0;i<50;i++){let c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'%';c.style.background=colors[i%colors.length];c.style.animationDelay=(Math.random()*0.6)+'s';c.style.animationDuration=(1.6+Math.random()*1.2)+'s';box.appendChild(c);}setTimeout(()=>document.getElementById('step1').classList.add('done'),400);setTimeout(()=>document.getElementById('step2').classList.add('done'),900);setTimeout(()=>{document.getElementById('step3').classList.add('active');document.getElementById('step3').innerText='↻';},1400);setTimeout(()=>{document.getElementById('step3').classList.remove('active');document.getElementById('step3').classList.add('done');document.getElementById('step3').innerText='✓';document.getElementById('step4').classList.add('done');},1900);if(navigator.vibrate) navigator.vibrate([100,50,100]);}
+function hapusRiwayat(id){orders=orders.filter(o=>o.id!==id);localStorage.setItem('orders_user',JSON.stringify(orders));renderRiwayat();renderHome();showToast('Pesanan dihapus','info');}
+function hapusSemuaRiwayat(){let u=currentUser?currentUser.user:'tamu';let my=orders.filter(o=>o.user==u);if(!my.length){showToast('Riwayat sudah kosong!','info');return;}orders=orders.filter(o=>o.user!==u);localStorage.setItem('orders_user',JSON.stringify(orders));renderRiwayat();renderHome();showToast('Semua riwayat dihapus','success');}
+function renderRiwayat(){let u=currentUser?currentUser.user:'tamu';let my=orders.filter(o=>o.user==u);if(!my.length){document.getElementById('riwayat').innerHTML='Belum ada pesanan.';return;}document.getElementById('riwayat').innerHTML=my.slice().reverse().map(o=>`<div class="flex" style="padding:10px;border-bottom:1px solid #333"><span><b>${o.game} - ${o.nominal}</b><br>${o.id} | ${o.idGame} | ${o.bayar}</span><span><b>Rp ${o.harga.toLocaleString('id-ID')}</b><br><button class="btn btn-blue" style="width:auto;padding:6px 10px;margin-top:5px" onclick="lihatSuksesLama('${o.id}')">Invoice ✅</button> <button class="btn btn-red" style="width:auto;padding:6px 10px;margin-top:5px" onclick="hapusRiwayat(<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOPUPKU - Tempat Top Up Game Termurah</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#020617;color:#fff;min-height:100vh}
+.topbar{background:#04110f;padding:8px 16px;font-size:12px;color:#94a3b8;display:flex;justify-content:space-between}
+.header{background:#022c22;padding:12px 16px;display:flex;gap:12px;align-items:center;position:sticky;top:0;z-index:20}
+.logo{font-size:24px;font-weight:900;white-space:nowrap}.logo span{color:#22c55e}
+.search{flex:1;background:#fff;border-radius:25px;display:flex;overflow:hidden}
+.search input{flex:1;border:none;padding:11px 14px;outline:none;color:#111;background:transparent}
+.search button{border:none;background:#22c55e;color:#fff;padding:0 16px;font-weight:800;cursor:pointer}
+.icon-btn{background:#064e3b;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0}
+.container{max-width:1100px;margin:auto;padding:14px}
+.banner{background:linear-gradient(135deg,#16a34a,#14532d);border-radius:18px;padding:22px;display:flex;gap:14px;align-items:center}
+.banner h1{font-size:26px;line-height:1.2}.banner p{opacity:.9;font-size:13px;margin:8px 0 12px}
+.btn{padding:12px 18px;border:none;border-radius:10px;cursor:pointer;font-weight:800;width:100%}
+.btn-green{background:#22c55e;color:#fff}.btn-yellow{background:#f59e0b;color:#fff}.btn-red{background:#ef4444;color:#fff}.btn-blue{background:#2563eb;color:#fff}
+.chip{background:#0f2a2e;border:1px solid #164e4a;padding:8px 12px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip.active{background:#22c55e;color:#fff}
+.scroll{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
+.game-card{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;overflow:hidden;cursor:pointer}
+.game-card img{width:100%;height:130px;object-fit:cover}
+.game-card .in{padding:10px}
+.tag{background:#22c55e;color:#fff;font-size:11px;padding:3px 7px;border-radius:20px}.tag-red{background:#ef4444}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#020617;color:#fff;margin:8px 0;outline:none;transition:.2s}
+input.error{border-color:#ef4444 !important;box-shadow:0 0 0 2px rgba(239,68,68,.3)}
+.nominal{background:#0f2a2e;border:2px solid #1e4a4a;padding:12px;border-radius:12px;cursor:pointer;text-align:center}
+.nominal.active{border-color:#22c55e;background:#14532d}
+.pay{border:2px solid #1e4a4a;border-radius:12px;padding:10px 12px;display:flex;gap:12px;align-items:center;cursor:pointer;background:#0f2a2e}
+.pay.active{border-color:#22c55e;background:#14532d}
+.pay img{background:#fff !important;border:1px solid #ddd;border-radius:8px;flex-shrink:0}
+.hidden{display:none}.badge{background:#22c55e;color:#fff;padding:3px 8px;border-radius:20px;font-size:12px}.small{font-size:13px;color:#94a3b8}.flex{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.auth-box{max-width:420px;margin:30px auto;background:#0f172a;padding:28px;border-radius:20px;border:1px solid #1e293b}
+.link{color:#22c55e;cursor:pointer;font-weight:700}.eye{position:absolute;right:12px;top:20px;cursor:pointer}.wrap{position:relative}
+.profil-head{background:linear-gradient(135deg,#16a34a,#14532d,#0ea5e9);border-radius:20px;padding:26px 18px 20px;text-align:center;position:relative;overflow:hidden}
+.profil-head::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.25),transparent 60%)}
+.profil-avatar{width:92px;height:92px;border-radius:50%;background:#fff;color:#14532d;font-size:36px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:4px solid rgba(255,255,255,.4);position:relative;z-index:2;box-shadow:0 8px 20px rgba(0,0,0,.3);cursor:pointer;overflow:hidden;object-fit:cover}
+.profil-avatar img{width:100%;height:100%;object-fit:cover}
+.kamera-btn{position:absolute;bottom:2px;right:calc(50% - 46px);width:30px;height:30px;background:#22c55e;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:3;cursor:pointer}
+.profil-stat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+.profil-stat div{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:14px;padding:12px 6px;text-align:center}
+.profil-stat b{font-size:18px;color:#22c55e;display:block}
+.profil-stat span{font-size:11px;color:#94a3b8}
+.profil-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid #1e293b;font-size:14px}
+.profil-row span:last-child{font-weight:700;text-align:right}
+.menu-item{display:flex;gap:12px;align-items:center;padding:14px;background:#0f2a2e;border:1px solid #1e4a4a;border-radius:14px;margin-bottom:10px;cursor:pointer;font-weight:600}
+.menu-item small{display:block;font-weight:400;color:#94a3b8;font-size:12px}
+.menu-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+#toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,100px);background:#111827;border:1px solid #334155;color:#fff;padding:14px 20px;border-radius:14px;font-size:14px;font-weight:600;z-index:9999;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:.35s cubic-bezier(.2,.9,.3,1.2);max-width:90%;text-align:center}
+#toast.show{transform:translate(-50%,0);opacity:1}
+#toast.success{border-color:#22c55e;background:#052e16}
+#toast.error{border-color:#ef4444;background:#450a0a}
+#toast.info{border-color:#0ea5e9;background:#082f49}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.shake{animation:shake .4s ease}
+@keyframes gantiWarna{0%{background:#22c55e;box-shadow:0 0 20px rgba(34,197,94,.7)}20%{background:#16a34a;box-shadow:0 0 20px rgba(22,163,74,.7)}40%{background:#0ea5e9;box-shadow:0 0 20px rgba(14,165,233,.7)}60%{background:#8b5cf6;box-shadow:0 0 20px rgba(139,92,246,.7)}80%{background:#f59e0b;box-shadow:0 0 20px rgba(245,158,11,.7)}100%{background:#22c55e;box-shadow:0 0 20px rgba(34,197,94,.7)}}
+@keyframes kilauLewat{0%{left:-100%}100%{left:120%}}
+@keyframes goyangDikit{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.btn-masuk{background:#22c55e;color:#fff;animation:gantiWarna 4s linear infinite,goyangDikit 2s ease-in-out infinite;position:relative;overflow:hidden;font-size:16px;letter-spacing:1px}
+.btn-masuk:active{transform:scale(.96)}
+.btn-masuk::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:kilauLewat 2s ease-in-out infinite}
+.sukses-page{background:#020617;min-height:100vh;padding-bottom:80px;overflow:hidden;position:relative}
+.sukses-top{background:#22c55e;text-align:center;padding:35px 20px 30px;position:relative;overflow:hidden}
+.sukses-top::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+@keyframes popIn{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.25) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@keyframes bounceCheck{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes progressFill{from{width:0}to{width:100%}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 12px rgba(245,158,11,.18),0 0 0 24px rgba(245,158,11,.08)}50%{box-shadow:0 0 0 16px rgba(245,158,11,.25),0 0 0 32px rgba(245,158,11,.12)}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(650px) rotate(720deg);opacity:0}}
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.check-wrap{width:90px;height:90px;background:#f59e0b;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:45px;color:#fff;position:relative;z-index:2;animation:popIn .6s ease forwards,pulseGlow 1.6s ease-in-out infinite 0.6s}
+.check-wrap span{display:inline-block;animation:bounceCheck .5s ease .7s 2}
+.sukses-top h1{font-size:28px;animation:fadeUp .6s ease .2s both}
+.sukses-top p{opacity:.9;margin-top:6px;font-size:14px;animation:fadeUp .6s ease .35s both}
+.confetti{position:absolute;top:0;width:10px;height:14px;border-radius:2px;z-index:1;animation:confettiFall 2.2s ease-in forwards;pointer-events:none}
+.progress-box{padding:22px 20px;animation:fadeUp .5s ease .4s both}
+.progress-line{display:flex;align-items:center;justify-content:space-between;position:relative}
+.progress-line::before{content:'';position:absolute;left:20px;right:20px;top:22px;height:4px;background:#1e293b;z-index:0}
+.progress-fill{position:absolute;left:20px;top:22px;height:4px;background:#22c55e;z-index:0;border-radius:10px;animation:progressFill 1.2s ease .8s both}
+.p-step{width:46px;height:46px;border-radius:50%;background:#020617;border:2px solid #334155;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:1;opacity:.4;transform:scale(.8)}
+.p-step.active{border-color:#22c55e;opacity:1;transform:scale(1);transition:.4s}
+.p-step.done{background:#22c55e;border-color:#22c55e;color:#fff;opacity:1;transform:scale(1);transition:.4s}
+.sukses-card{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;padding:16px;margin:0 16px 14px;display:flex;gap:14px;align-items:center;animation:fadeUp .5s ease .6s both}
+.sukses-card img{width:105px;height:105px;border-radius:12px;object-fit:cover}
+.sukses-harga{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;padding:18px;margin:0 16px;animation:fadeUp .5s ease .8s both}
+.sukses-harga .row{display:flex;justify-content:space-between;padding:7px 0;font-size:15px}
+.row.total{border-top:1px solid #1e4a4a;margin-top:8px;padding-top:12px;font-weight:800}
+.total-anim{background:linear-gradient(90deg,#22c55e,#f59e0b,#22c55e);background-size:200px 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 1.5s linear infinite}
+.btn-anim{animation:fadeUp .5s ease 1s both}
+.verified-anim{animation:slideIn .5s ease 1.1s both}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:10000;padding:0}
+.modal-box-full{background:#0f172a;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;border-radius:20px 20px 0 0;padding:20px;padding-bottom:30px}
+.konfirm-card{background:#0f2a2e;border:1px solid #1e4a4a;border-radius:16px;padding:16px;margin-bottom:14px}
+.konfirm-card h4{color:#6ee7a8;margin-bottom:10px;font-size:15px}
+.konfirm-card .row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;gap:10px}
+.konfirm-card .row span:last-child{text-align:right;font-weight:600}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<input type="file" id="inputFoto" accept="image/*" style="display:none" onchange="gantiFotoProfil(event)">
+
+<!-- POPUP KONFIRMASI PEMBELIAN ALA YOUDUSTORE -->
+<div id="modalKonfirm" class="modal hidden"><div class="modal-box-full"><div style="display:flex;justify-content:space-between;align-items:center"><h3>Konfirmasi Pembelian</h3><span style="font-size:22px;cursor:pointer" onclick="tutupKonfirm()">✕</span></div><p class="small" style="margin:6px 0 14px;color:#6ee7a8">Pastikan semua data sudah benar sebelum melanjutkan.</p><div class="konfirm-card"><h4>Detail Produk</h4><div class="row"><span>ID</span><span id="kIdGame">-</span></div><div class="row"><span>Items</span><span id="kItems">-</span></div><div class="row"><span>Game</span><span id="kGame">-</span></div><div class="row"><span>Email</span><span id="kEmail">-</span></div></div><div class="konfirm-card"><h4>Detail Pembayaran</h4><div class="row"><span>Metode Pembayaran</span><span id="kBayar">-</span></div><div class="row"><span>Harga</span><span id="kHarga">-</span></div><div class="row"><span>Jumlah</span><span>1x</span></div><div class="row"><span>Biaya Pembayaran</span><span>Rp 0</span></div><div class="row" style="border-top:1px solid #1e4a4a;margin-top:6px;padding-top:10px;font-weight:800"><span>Total Bayar</span><span id="kTotal" style="font-size:17px">-</span></div></div><button class="btn btn-green" style="font-size:16px" onclick="konfirmasiPembelian()">Konfirmasi Pembelian</button><button class="btn" style="background:#1e293b;margin-top:10px" onclick="tutupKonfirm()">Batal</button></div></div>
+
+<div class="topbar"><span>📞 CS 0851-3554-6055 | 24 Jam Online</span><span id="topUser">Masuk / Daftar</span></div>
+<div id="page-login"><div class="auth-box" style="text-align:center"><h1 style="font-size:34px">TOP<span style="color:#22c55e">UP</span>KU</h1><p class="small" style="margin:8px 0">Top Up Game Termurah, Cepat & Terpercaya</p><div style="text-align:left"><label>Username</label><input id="loginUser" placeholder="Username"><label>Password</label><div class="wrap"><input id="loginPass" type="password" placeholder="Password"><span class="eye" onclick="togglePass('loginPass')">👁️</span></div></div><div id="loginError" class="hidden" style="background:#450a0a;border:1px solid #ef4444;color:#fca5a5;padding:10px;border-radius:10px;font-size:13px;margin-top:10px;text-align:left">❌ Username atau password salah! Coba lagi ya.</div><div style="text-align:right;margin-top:6px"><span class="link" onclick="showPage('page-lupa')">Lupa Sandi?</span></div><button class="btn btn-masuk" style="margin-top:10px" onclick="doLogin()">MASUK ✨</button><p class="small" style="margin-top:12px">Belum punya akun? <span class="link" onclick="showPage('page-daftar')">Buat Akun</span></p></div></div>
+<div id="page-daftar" class="hidden"><div class="auth-box"><h2 style="text-align:center">Buat Akun ✨</h2><label>Nama</label><input id="regNama" placeholder="Budi Santoso"><label>Username</label><input id="regUser" placeholder="budi123"><label>WA</label><input id="regWa" placeholder="08xxxxxxxxxx"><label>Password</label><input id="regPass" type="password"><label>Ulangi</label><input id="regPass2" type="password"><button class="btn btn-masuk" onclick="doDaftar()">DAFTAR ✨</button><p class="small" style="text-align:center;margin-top:10px">Sudah punya akun? <span class="link" onclick="showPage('page-login')">Login</span></p></div></div>
+<div id="page-lupa" class="hidden"><div class="auth-box"><h2 style="text-align:center">Lupa Sandi? 🔑</h2><div id="lupa-step1"><label>Username</label><input id="lupaUser"><button class="btn btn-masuk" onclick="cekUserLupa()">CEK AKUN</button></div><div id="lupa-step2" class="hidden"><p>Akun: <b id="lupaNama"></b></p><label>Password Baru</label><input id="lupaPassBaru" type="password"><label>Ulangi</label><input id="lupaPassBaru2" type="password"><button class="btn btn-masuk" onclick="gantiPass()">GANTI</button></div><p class="small" style="text-align:center;margin-top:10px"><span class="link" onclick="showPage('page-login')">Kembali</span></p></div></div>
+<div id="page-home" class="hidden"><div class="header"><div class="logo">TOP<span>UP</span>KU</div><div class="search"><input id="cariGame" placeholder="Cari game... Mobile Legends, Free Fire" oninput="filterGame()"><button onclick="filterGame()">🔍</button></div><div class="icon-btn" onclick="showPage('page-riwayat')">🧾</div><div class="icon-btn" onclick="bukaProfil()">👤</div></div><div class="container"><div class="banner"><div style="flex:1"><span class="tag">🔥 PROMO HARI INI</span><h1>Top Up Game<br>Paling Murah & Cepat!</h1><p>Diskon up to 30% • Proses 1-5 Menit • Bayar QRIS / DANA / OVO / GOPAY / TRANSFER BANK BCA / CASH</p><button class="btn btn-yellow" style="width:auto" onclick="document.getElementById('listGame').scrollIntoView({behavior:'smooth'})">TOP UP SEKARANG →</button></div><div style="font-size:70px">🎮</div></div><div class="scroll" id="kategoriList"><div class="chip active" onclick="filterKategori('Semua',this)">Semua</div><div class="chip" onclick="filterKategori('Top Up Game',this)">🎮 Top Up Game</div></div><h3 style="margin:10px 0" id="listGame">Populer Hari Ini</h3><div class="grid" id="gameList"></div><div class="card"><div class="flex"><h3>🧾 Riwayat Terakhir</h3><button class="btn btn-red" style="width:auto;padding:8px 12px;font-size:13px" onclick="hapusSemuaRiwayat()">🗑️ Hapus Semua</button></div><div id="riwayatHome" style="margin-top:10px" class="small">Belum ada pesanan.</div></div></div></div>
+<div id="page-profil" class="hidden"><div class="header"><div class="icon-btn" onclick="showPage('page-home')">←</div><b>Profil Saya</b><div style="flex:1"></div><div class="icon-btn" onclick="showPage('page-home')">🏠</div></div><div class="container"><div class="profil-head"><div style="position:relative;width:92px;margin:0 auto"><div class="profil-avatar" id="profilAvatar" onclick="document.getElementById('inputFoto').click()">B</div><div class="kamera-btn" onclick="document.getElementById('inputFoto').click()">📷</div></div><p class="small" style="color:#fff;opacity:.8;position:relative;z-index:2;margin-bottom:8px">Tap foto untuk ganti foto profil</p><b id="profilNama" style="font-size:22px;position:relative;z-index:2">Budi Santoso</b><br><span id="profilUsername" style="opacity:.85;position:relative;z-index:2">@budi123 • Member VIP 👑</span><br><span style="background:rgba(0,0,0,.25);padding:4px 12px;border-radius:20px;font-size:12px;position:relative;z-index:2;display:inline-block;margin-top:8px">✅ Akun Terverifikasi</span></div><div class="profil-stat"><div><b id="statTransaksi">0</b><span>Transaksi</span></div><div><b id="statTotal">Rp 0</b><span>Total Belanja</span></div><div><b id="statLevel">Bronze</b><span>Level Member</span></div></div><div class="card"><h3 style="margin-bottom:6px">📋 Data Akun</h3><div class="profil-row"><span>👤 Nama Lengkap</span><span id="profilNama2">-</span></div><div class="profil-row"><span>🆔 Username</span><span id="profilUser2">-</span></div><div class="profil-row"><span>📱 No. WhatsApp</span><span id="profilWa">-</span></div><div class="profil-row"><span>📅 Bergabung</span><span id="profilJoin">Hari Ini</span></div><div class="profil-row" style="border:none"><span>⭐ Status</span><span style="color:#22c55e">Aktif • VIP</span></div></div><div class="menu-item" onclick="showPage('page-riwayat')"><div class="menu-icon" style="background:#1e3a8a">🧾</div><div style="flex:1">Riwayat Pesanan<small id="profilRiwayatText">Lihat semua transaksi kamu</small></div><span>›</span></div><div class="menu-item" onclick="editProfil()"><div class="menu-icon" style="background:#14532d">✏️</div><div style="flex:1">Edit Profil<small>Ubah nama & nomor WA</small></div><span>›</span></div><div class="menu-item" onclick="hubungiCS()"><div class="menu-icon" style="background:#25D366">💬</div><div style="flex:1">Hubungi CS<small>Chat WhatsApp • Online 24 jam • 0851-3554-6055</small></div><span>›</span></div><div id="editBox" class="card hidden"><h3>✏️ Edit Profil</h3><label>Nama Lengkap</label><input id="editNama"><label>No. WhatsApp</label><input id="editWa"><button class="btn btn-masuk" onclick="simpanProfil()">SIMPAN PERUBAHAN ✅</button><button class="btn btn-red" style="margin-top:8px" onclick="hapusFotoProfil()">HAPUS FOTO PROFIL 🗑️</button></div><button class="btn btn-red" onclick="logout()">KELUAR DARI AKUN 🚪</button><p class="small" style="text-align:center;margin-top:12px">TOPUPKU v1.0 • Dibuat untuk Gamer Indonesia 🇮🇩</p></div></div>
+<div id="page-detail" class="hidden"><div class="header"><div class="icon-btn" onclick="showPage('page-home')">←</div><div class="logo" style="font-size:18px">TOP<span>UP</span>KU</div><div style="flex:1"></div><div class="icon-btn" onclick="showPage('page-riwayat')">🧾</div></div><div class="container"><div class="card" style="display:flex;gap:14px"><img id="dImg" style="width:100px;height:100px;border-radius:12px;object-fit:cover"><div><b id="dNama" style="font-size:20px">Mobile Legends</b><p class="small" id="dDesc">Top Up Diamond ML</p><p style="margin-top:6px"><span class="tag">🔥 Terlaris</span> <span class="tag tag-red">Diskon 10%</span> <span class="small">• ⭐ 4.9</span></p></div></div><div class="card"><h3>1. Masukkan ID Game</h3><input id="idGame" placeholder="User ID: 123456789"><input id="serverGame" placeholder="Server / Zone ID (opsional)"></div><div class="card"><h3>2. Pilih Nominal</h3><div class="grid" id="nominalList" style="margin-top:10px"></div></div><div class="card"><h3>3. Pembayaran</h3><div id="payList" style="display:grid;gap:10px;margin-top:10px"></div></div><div class="card"><h3>4. Detail Kontak</h3><label>Email</label><input id="emailUser" type="email" placeholder="bebysukmawati202@gmail.com"><p class="small">Invoice & bukti bayar dikirim ke email ini.</p></div><div class="card"><div class="flex"><b>Total: <span id="totalHarga" style="color:#22c55e">Rp 0</span></b><button class="btn btn-masuk" style="width:auto" onclick="checkout()">BELI SEKARANG 💸</button></div></div></div></div>
+<div id="page-riwayat" class="hidden"><div class="header"><div class="icon-btn" onclick="showPage('page-home')">←</div><b>Riwayat Pesanan</b><div style="flex:1"></div></div><div class="container"><div class="card"><div id="riwayat">Belum ada pesanan.</div></div></div></div>
+<div id="page-invoice" class="hidden"><div style="background:#f59e0b;color:#111;text-align:center;padding:28px 16px 20px"><div style="font-size:50px">⏳</div><h2 style="font-size:24px">Menunggu Pembayaran</h2><p style="font-size:13px;opacity:.8">Silakan lakukan pembayaran dengan metode yang kamu pilih.</p></div><div class="container" style="padding-bottom:40px"><div class="card" style="margin-top:-10px"><h3>Progress Transaksi</h3><div class="progress-line" style="margin-top:14px"><div class="progress-fill" style="width:35%"></div><div class="p-step done">🛒</div><div class="p-step done">💳</div><div class="p-step active">↻</div><div class="p-step">✓</div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-top:8px"><span>Pesanan</span><span>Bayar</span><span>Proses</span><span>Selesai</span></div><div style="background:#450a0a;border:1px solid #ef4444;text-align:center;padding:10px;border-radius:10px;margin-top:14px;font-weight:800;color:#fca5a5">⏰ <span id="invTimer">0 Jam 59 Menit 59 Detik</span></div></div><div class="card" style="display:flex;gap:14px"><img id="invImg" style="width:80px;height:80px;border-radius:12px;object-fit:cover"><div><b id="invNama" style="font-size:19px">Mobile Legends</b><br><span id="invNominal" style="color:#94a3b8">86 Diamond</span><br><span style="font-size:13px">ID <span id="invIdGame" style="color:#22c55e;font-weight:700">-</span></span><br><span class="small" id="invEmailShow">-</span></div></div><div class="card"><div class="flex" style="padding:6px 0"><span>Harga</span><b id="invHarga">Rp 0</b></div><div class="flex" style="padding:6px 0"><span>Jumlah</span><b>1x</b></div><div class="flex" style="padding:6px 0"><span>Payment Fee</span><b>Rp 0</b></div><div class="flex" style="padding:6px 0;border-top:1px solid #333;margin-top:6px;padding-top:10px"><span>Total Pembayaran</span><b id="invTotal" style="color:#22c55e;font-size:18px">Rp 0</b></div><div class="flex" style="padding:6px 0"><span>Metode Pembayaran</span><b id="invBayar">QRIS</b></div><div class="flex" style="padding:6px 0"><span>Nomor Invoice</span><b id="invInvoice">YOU12345</b></div><div class="flex" style="padding:6px 0"><span>Status Pembayaran</span><b style="background:#f59e0b;color:#111;padding:3px 10px;border-radius:20px;font-size:12px">UNPAID</b></div><div class="flex" style="padding:6px 0"><span>Status Transaksi</span><b style="background:#334155;padding:3px 10px;border-radius:20px;font-size:12px">PENDING</b></div><div class="flex" style="padding:6px 0"><span>Waktu Order Dibuat</span><b id="invTanggal">-</b></div></div><div class="card" style="text-align:center"><h3>Kode Pembayaran</h3><p class="small" style="margin:8px 0">Scan QR Code untuk melakukan pembayaran.</p><img id="invQrisImg" src="qris.jpg" onerror="this.src='https://via.placeholder.com/300x300/fff/111?text=QRIS+KAMU'" style="width:260px;height:260px;object-fit:contain;background:#fff;border-radius:12px;padding:10px"><p class="small" style="margin-top:8px" id="invBayarInfo">Atas Nama: <b style="color:#fff">TOPUPKU</b> • Buka DANA / OVO / GoPay / m-Banking</p></div><div class="card"><h3>Instruksi Pembayaran</h3><p class="small" style="margin-top:8px;line-height:1.6">1. Buka DANA / OVO / GoPay / m-Banking<br>2. Scan QR Code di atas<br>3. Bayar sesuai Total Pembayaran<br>4. Screenshot bukti bayar<br>5. Klik tombol Saya Sudah Bayar</p></div><button class="btn btn-masuk" onclick="sudahBayarInvoice()">SAYA SUDAH BAYAR ✅</button><button class="btn btn-red" style="margin-top:10px" onclick="showPage('page-home')">KEMBALI KE HOME</button></div></div>
+<div id="page-sukses" class="hidden"><div class="sukses-page" id="suksesPage"><div class="sukses-top" id="suksesTop"><div id="confettiBox"></div><div class="check-wrap"><span>✓</span></div><h1>Pembayaran Berhasil</h1><p>Transaksi telah berhasil dilakukan.</p></div><div class="progress-box"><h3>Progress Transaksi</h3><div class="progress-line"><div class="progress-fill" id="progressFill"></div><div class="p-step" id="step1">🛒</div><div class="p-step" id="step2">💳</div><div class="p-step" id="step3">↻</div><div class="p-step" id="step4">✓</div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-top:8px"><span>Pesanan</span><span>Bayar</span><span>Proses</span><span>Selesai</span></div></div><p style="padding:0 20px;color:#cbd5e1" id="suksesTanggal">19/11/2026, 07.11.23</p><br><div class="sukses-card"><img id="suksesImg" src=""><div><b id="suksesNamaProduk" style="font-size:19px">Mobile Legends</b><br><span id="suksesNominal">86 Diamond</span><br><br><span>ID</span><br><span id="suksesIdGame" style="color:#22c55e;font-weight:700">123456</span></div></div><div class="sukses-harga"><div class="row"><span>Harga</span><span id="suksesHarga">Rp 21.000</span></div><div class="row"><span>Jumlah</span><span>1x</span></div><div class="row"><span>Diskon</span><span>Rp 0</span></div><div class="row"><span>Metode Bayar</span><span id="suksesBayar">QRIS</span></div><div class="row total"><span>Total</span><b id="suksesTotal" class="total-anim">Rp 21.000</b></div><div class="row"><span>No. Invoice</span><b id="suksesInvoice">ORD12345</b></div><div class="row"><span>Status</span><b style="color:#22c55e">✅ BERHASIL</b></div></div><div class="verified-anim" style="margin:14px 16px;background:#111827;border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;font-size:13px"><img id="verifiedImg" style="width:48px;height:48px;border-radius:8px;object-fit:cover"><div><b id="verifiedNama">TOPUPKU</b><br><span style="color:#22c55e">✔️ Verified by TOPUPKU - TEMPAT BELI DIAMOND TERPERCAYA</span></div></div><div class="btn-anim" style="padding:0 16px;display:flex;gap:10px"><button class="btn btn-masuk" onclick="showPage('page-home')">KEMBALI 🏠</button><button class="btn btn-blue" onclick="showToast('Struk tersimpan! Screenshot halaman ini ya.','info')">DOWNLOAD STRUK 🧾</button></div></div></div>
+<script>
+let users=JSON.parse(localStorage.getItem('topup_users')||'[{"nama":"Admin","user":"admin","wa":"085135546055","pass":"12345"}]');
+let currentUser=null,lastOrder=null,selGame=0,selNominal=0,selBayar='QRIS',filterKat='Semua',keyword='';
+let toastTimer;let timerInv;let pendingData=null;
+function showToast(msg,type='info'){let t=document.getElementById('toast');t.className='show '+type;t.innerHTML=(type=='success'?'✅ ':type=='error'?'❌ ':'ℹ️ ')+msg;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.className='';},2800);if(navigator.vibrate && type=='error') navigator.vibrate(120);}
+function shakeEl(id){let e=document.getElementById(id);e.classList.remove('shake','error');void e.offsetWidth;e.classList.add('shake','error');}
+const CS_WA='6285135546055';
+function hubungiCS(){let nama=currentUser?currentUser.nama:'Calon Pembeli';let pesan='Halo Admin TOPUPKU 👋%0ASaya '+encodeURIComponent(nama)+', mau tanya soal top up game dong.';window.open('https://wa.me/'+CS_WA+'?text='+pesan,'_blank');showToast('Membuka WhatsApp ke 0851-3554-6055...','info');}
+function getFotoKey(){return 'topup_foto_'+(currentUser?currentUser.user:'tamu');}
+function tampilkanFotoProfil(){let foto=localStorage.getItem(getFotoKey());let el=document.getElementById('profilAvatar');if(foto){el.innerHTML='<img src="'+foto+'">';el.style.background='#fff';}else{el.innerHTML=(currentUser?currentUser.nama.charAt(0).toUpperCase():'B');}}
+function gantiFotoProfil(e){let file=e.target.files[0];if(!file)return;if(file.size>800000){showToast('Fotonya kegedean, pilih yang < 800KB ya!','error');return;}let reader=new FileReader();reader.onload=function(ev){let img=new Image();img.onload=function(){let c=document.createElement('canvas');let max=300;let w=img.width,h=img.height;if(w>h){if(w>max){h=h*max/w;w=max;}}else{if(h>max){w=w*max/h;h=max;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);let data=c.toDataURL('image/jpeg',0.8);localStorage.setItem(getFotoKey(),data);tampilkanFotoProfil();showToast('Foto profil berhasil diganti! 📷','success');};img.src=ev.target.result;};reader.readAsDataURL(file);e.target.value='';}
+function hapusFotoProfil(){localStorage.removeItem(getFotoKey());tampilkanFotoProfil();showToast('Foto profil dihapus, balik ke huruf awal','info');}
+let games=[
+ {nama:"Mobile Legends",kat:"Top Up Game",img:"ML.jpg",desc:"Diamond ML, Starlight",nominals:[{nama:"86 Diamond",harga:21000},{nama:"172 Diamond",harga:42000},{nama:"257 Diamond",harga:63000},{nama:"500 Diamond",harga:122000}]},
+ {nama:"Free Fire",kat:"Top Up Game",img:"ff.jpg",desc:"Diamond FF Termurah",nominals:[{nama:"70 Diamond",harga:10000},{nama:"140 Diamond",harga:20000},{nama:"355 Diamond",harga:50000},{nama:"720 Diamond",harga:99000}]},
+ {nama:"PUBG Mobile",kat:"Top Up Game",img:"pubg.jpg",desc:"UC PUBG Mobile",nominals:[{nama:"60 UC",harga:15000},{nama:"325 UC",harga:75000},{nama:"660 UC",harga:149000}]},
+ {nama:"Roblox",kat:"Top Up Game",img:"roblox.jpg",desc:"Robux via Gamepass",nominals:[{nama:"400 Robux",harga:65000},{nama:"800 Robux",harga:129000},{nama:"1700 Robux",harga:259000}]},
+ {nama:"Valorant",kat:"Top Up Game",img:"valorant.jpg",desc:"Valorant Points",nominals:[{nama:"475 VP",harga:50000},{nama:"1000 VP",harga:100000},{nama:"2050 VP",harga:195000}]},
+ {nama:"Genshin Impact",kat:"Top Up Game",img:"genshin.jpg",desc:"Genesis & Welkin",nominals:[{nama:"60 Genesis",harga:16000},{nama:"Blessing Welkin",harga:79000},{nama:"980 Genesis",harga:249000}]},
+];
+let pays=[
+  {nama:"QRIS", img:"qris.jpg", desc:"Scan QR - Otomatis"},
+  {nama:"DANA", img:"dana.jpg", desc:"Transfer DANA"},
+  {nama:"OVO", img:"ovo.jpg", desc:"Transfer OVO"},
+  {nama:"GoPay", img:"gopay.jpg", desc:"Transfer GoPay"},
+  {nama:"Transfer Bank BCA", img:"bca.jpg", desc:"BCA 1234567890"},
+  {nama:"CASH", img:"cash.jpg", desc:"Bayar Cash / Ketemu"},
+];
+let orders=JSON.parse(localStorage.getItem('orders_user')||'[]');
+function showPage(id){['page-login','page-daftar','page-lupa','page-home','page-detail','page-riwayat','page-sukses','page-profil','page-invoice'].forEach(p=>document.getElementById(p).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0);if(id=='page-home')renderHome();if(id=='page-sukses')playSuksesAnim();}
+function togglePass(id){let e=document.getElementById(id);e.type=e.type=='password'?'text':'password';}
+function saveUsers(){localStorage.setItem('topup_users',JSON.stringify(users));}
+function bukaProfil(){if(!currentUser){showToast('Login dulu ya!','error');showPage('page-login');return;}let u=currentUser;let my=orders.filter(o=>o.user==u.user);let total=my.reduce((a,b)=>a+b.harga,0);let level=total>=500000?'Diamond 💎':total>=200000?'Gold 🥇':total>=50000?'Silver 🥈':'Bronze 🥉';tampilkanFotoProfil();document.getElementById('profilNama').innerText=u.nama;document.getElementById('profilUsername').innerText='@'+u.user+' • Member VIP 👑';document.getElementById('profilNama2').innerText=u.nama;document.getElementById('profilUser2').innerText='@'+u.user;document.getElementById('profilWa').innerText=u.wa||'-';document.getElementById('profilJoin').innerText='Hari Ini • '+new Date().toLocaleDateString('id-ID');document.getElementById('statTransaksi').innerText=my.length+'x';document.getElementById('statTotal').innerText='Rp '+total.toLocaleString('id-ID');document.getElementById('statLevel').innerText=level;document.getElementById('profilRiwayatText').innerText=my.length?my.length+' transaksi • Terakhir: '+my[my.length-1].game:'Belum ada transaksi, yuk top up!';document.getElementById('editBox').classList.add('hidden');showPage('page-profil');}
+function editProfil(){document.getElementById('editBox').classList.remove('hidden');document.getElementById('editNama').value=currentUser.nama;document.getElementById('editWa').value=currentUser.wa||'';document.getElementById('editBox').scrollIntoView({behavior:'smooth'});}
+function simpanProfil(){let n=document.getElementById('editNama').value.trim(),w=document.getElementById('editWa').value.trim();if(!n||!w){showToast('Isi nama & WA dulu!','error');return;}let i=users.findIndex(x=>x.user==currentUser.user);users[i].nama=n;users[i].wa=w;currentUser.nama=n;currentUser.wa=w;saveUsers();document.getElementById('topUser').innerText='Halo, '+n+' 👋';showToast('Profil berhasil diupdate!','success');bukaProfil();}
+function masukTamu(){currentUser={nama:"Tamu",user:"tamu"};document.getElementById('topUser').innerText="Halo, Tamu 👋";showPage('page-home');renderHome();}
+function doDaftar(){let n=document.getElementById('regNama').value.trim(),u=document.getElementById('regUser').value.trim().toLowerCase(),w=document.getElementById('regWa').value.trim(),p1=document.getElementById('regPass').value,p2=document.getElementById('regPass2').value;if(!n||!u||!w||!p1){showToast('Isi semua kolom dulu ya!','error');return;}if(p1.length<4){showToast('Password minimal 4 karakter!','error');return;}if(p1!==p2){showToast('Password tidak sama!','error');return;}if(users.find(x=>x.user==u)){showToast('Username sudah dipakai!','error');return;}users.push({nama:n,user:u,wa:w,pass:p1});saveUsers();showToast('Akun berhasil dibuat! Silakan login.','success');showPage('page-login');document.getElementById('loginUser').value=u;}
+function doLogin(){let u=document.getElementById('loginUser').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;let f=users.find(x=>x.user==u&&x.pass==p);if(!f){document.getElementById('loginError').classList.remove('hidden');shakeEl('loginUser');shakeEl('loginPass');showToast('Username atau password salah!','error');return;}document.getElementById('loginError').classList.add('hidden');currentUser=f;document.getElementById('topUser').innerText='Halo, '+f.nama+' 👋';showToast('Selamat datang, '+f.nama+'!','success');showPage('page-home');renderHome();}
+function cekUserLupa(){let u=document.getElementById('lupaUser').value.trim().toLowerCase();let f=users.find(x=>x.user==u);if(!f){showToast('Username tidak ditemukan!','error');return;}document.getElementById('lupa-step1').classList.add('hidden');document.getElementById('lupa-step2').classList.remove('hidden');document.getElementById('lupaNama').innerText=f.nama;}
+function gantiPass(){let u=document.getElementById('lupaUser').value.trim().toLowerCase(),p1=document.getElementById('lupaPassBaru').value,p2=document.getElementById('lupaPassBaru2').value;if(p1.length<4){showToast('Password minimal 4 karakter!','error');return;}if(p1!==p2){showToast('Password tidak sama!','error');return;}let i=users.findIndex(x=>x.user==u);users[i].pass=p1;saveUsers();showToast('Password berhasil diganti!','success');showPage('page-login');}
+function logout(){location.reload();}
+function filterKategori(k,el){filterKat=k;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(el)el.classList.add('active');renderHome();}
+function filterGame(){keyword=document.getElementById('cariGame').value.toLowerCase();renderHome();}
+function renderHome(){let list=games.filter(g=>(filterKat=='Semua'||g.kat==filterKat)&&g.nama.toLowerCase().includes(keyword));document.getElementById('gameList').innerHTML=list.map((g,i)=>{let idx=games.indexOf(g);return `<div class="game-card" onclick="bukaDetail(${idx})"><img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x200/22c55e/fff?text=${encodeURIComponent(g.nama)}'"><div class="in"><b>${g.nama}</b><br><span>${g.desc}</span><br><span style="color:#22c55e;font-weight:700">Mulai Rp ${g.nominals[0].harga.toLocaleString('id-ID')}</span> <span class="tag">Promo</span></div></div>`}).join('');renderRiwayat();let my=orders.filter(o=>o.user==(currentUser?currentUser.user:'tamu'));document.getElementById('riwayatHome').innerHTML=my.length?my.slice(-2).reverse().map(o=>`• ${o.game} - ${o.nominal} - Rp ${o.harga.toLocaleString('id-ID')} ✅`).join('<br>'):'Belum ada pesanan.';}
+function bukaDetail(i){selGame=i;selNominal=0;selBayar='QRIS';let g=games[i];document.getElementById('dImg').src=g.img;document.getElementById('dNama').innerText=g.nama;document.getElementById('dDesc').innerText=g.desc;renderDetail();showPage('page-detail');}
+function renderDetail(){let g=games[selGame];document.getElementById('nominalList').innerHTML=g.nominals.map((n,i)=>`<div class="nominal ${i==selNominal?'active':''}" onclick="pilihNominal(${i})"><b>${n.nama}</b><br>Rp ${n.harga.toLocaleString('id-ID')}</div>`).join('');document.getElementById('payList').innerHTML=pays.map(p=>`<div class="pay ${p.nama==selBayar?'active':''}" onclick="pilihBayar('${p.nama}')"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/120x60/ffffff/111111?text=${encodeURIComponent(p.nama)}'" style="width:64px;height:38px;object-fit:contain;padding:4px"><div style="flex:1"><b>${p.nama}</b><br><span class="small">${p.desc||''}</span></div><span style="font-size:20px">${p.nama==selBayar?'✅':'○'}</span></div>`).join('');document.getElementById('totalHarga').innerText='Rp '+g.nominals[selNominal].harga.toLocaleString('id-ID');}
+function pilihNominal(i){selNominal=i;renderDetail();}
+function pilihBayar(n){selBayar=n;renderDetail();}
+function checkout(){
+  let id=document.getElementById('idGame').value.trim();
+  let email=document.getElementById('emailUser').value.trim();
+  if(!id){showToast('Isi ID Game dulu ya!','error');shakeEl('idGame');return;}
+  if(!email||!email.includes('@')){showToast('Isi Email dulu ya!','error');shakeEl('emailUser');return;}
+  let g=games[selGame],n=g.nominals[selNominal];
+  pendingData={idGame:id,server:document.getElementById('serverGame').value||'-',email:email,game:g.nama,nominal:n.nama,harga:n.harga,bayar:selBayar};
+  document.getElementById('kIdGame').innerText=id+(pendingData.server!='-'?' ('+pendingData.server+')':'');
+  document.getElementById('kItems').innerText=n.nama;
+  document.getElementById('kGame').innerText=g.nama;
+  document.getElementById('kEmail').innerText=email;
+  document.getElementById('kBayar').innerText=selBayar+' MURAH';
+  document.getElementById('kHarga').innerText='Rp '+n.harga.toLocaleString('id-ID');
+  document.getElementById('kTotal').innerText='Rp '+n.harga.toLocaleString('id-ID');
+  document.getElementById('modalKonfirm').classList.remove('hidden');
+}
+function tutupKonfirm(){document.getElementById('modalKonfirm').classList.add('hidden');}
+function konfirmasiPembelian(){
+  if(!pendingData) return;
+  tutupKonfirm();
+  let g=games[selGame];
+  let invoice='YOU'+Date.now().toString().slice(-6);
+  lastOrder={id:invoice,user:currentUser?currentUser.user:'tamu',nama:currentUser?currentUser.nama:'Tamu',game:pendingData.game,img:g.img,nominal:pendingData.nominal,idGame:pendingData.idGame,server:pendingData.server,email:pendingData.email,bayar:pendingData.bayar,harga:pendingData.harga,tanggal:new Date().toLocaleString('id-ID'),status:'PENDING'};
+  document.getElementById('invImg').src=g.img;
+  document.getElementById('invNama').innerText=pendingData.game;
+  document.getElementById('invNominal').innerText=pendingData.nominal;
+  document.getElementById('invIdGame').innerText=pendingData.idGame;
+  document.getElementById('invEmailShow').innerText=pendingData.email;
+  document.getElementById('invHarga').innerText='Rp '+pendingData.harga.toLocaleString('id-ID');
+  document.getElementById('invTotal').innerText='Rp '+pendingData.harga.toLocaleString('id-ID');
+  document.getElementById('invBayar').innerText=pendingData.bayar;
+  document.getElementById('invInvoice').innerText=invoice;
+  document.getElementById('invTanggal').innerText=lastOrder.tanggal;
+  if(pendingData.bayar=='QRIS'){document.getElementById('invBayarInfo').innerHTML='Atas Nama: <b style="color:#fff">TOPUPKU</b> • Buka DANA / OVO / GoPay / m-Banking';}
+  else if(pendingData.bayar=='DANA'){document.getElementById('invBayarInfo').innerHTML='Transfer ke DANA: <b style="color:#fff">0851-3554-6055</b> a.n TOPUPKU - atau scan QR di atas';}
+  else if(pendingData.bayar=='Transfer Bank BCA'){document.getElementById('invBayarInfo').innerHTML='Transfer ke BCA: <b style="color:#fff">1234567890</b> a.n TOPUPKU';}
+  else {document.getElementById('invBayarInfo').innerHTML='Bayar via <b style="color:#fff">'+pendingData.bayar+'</b> - Scan QR di atas / hubungi WA';}
+  showPage('page-invoice');
+  let s=3600; clearInterval(timerInv);
+  timerInv=setInterval(()=>{s--; let h=Math.floor(s/3600), m=Math.floor((s%3600)/60), d=s%60;document.getElementById('invTimer').innerText=h+' Jam '+m+' Menit '+d+' Detik';if(s<=0){clearInterval(timerInv);showToast('Waktu bayar habis!','error');showPage('page-home');}},1000);
+}
+function sudahBayarInvoice(){
+  clearInterval(timerInv);
+  lastOrder.status='Berhasil';
+  orders.push(lastOrder);
+  localStorage.setItem('orders_user',JSON.stringify(orders));
+  renderRiwayat(); isiSukses(lastOrder); showPage('page-sukses');
+  let pesan=`Halo Admin TOPUPKU, saya SUDAH BAYAR ✅%0AInvoice: ${lastOrder.id}%0AGame: ${lastOrder.game} - ${lastOrder.nominal}%0AID Game: ${lastOrder.idGame}%0AEmail: ${lastOrder.email||'-'}%0ATotal: Rp ${lastOrder.harga.toLocaleString('id-ID')}%0ASaya kirim bukti di bawah ini ya!`;
+  window.open('https://wa.me/'+CS_WA+'?text='+pesan,'_blank');
+}
+function isiSukses(o){document.getElementById('suksesTanggal').innerText=o.tanggal;document.getElementById('suksesImg').src=o.img;document.getElementById('verifiedImg').src=o.img;document.getElementById('suksesNamaProduk').innerText=o.game;document.getElementById('suksesNominal').innerText=o.nominal;document.getElementById('suksesIdGame').innerText='ID: '+o.idGame+' • '+o.nama;document.getElementById('suksesHarga').innerText='Rp '+o.harga.toLocaleString('id-ID');document.getElementById('suksesBayar').innerText=o.bayar;document.getElementById('suksesTotal').innerText='Rp '+o.harga.toLocaleString('id-ID');document.getElementById('suksesInvoice').innerText=o.id;document.getElementById('verifiedNama').innerText=o.game;}
+function playSuksesAnim(){['step1','step2','step3','step4'].forEach(s=>{document.getElementById(s).classList.remove('done','active')});let fill=document.getElementById('progressFill'); fill.style.animation='none'; void fill.offsetWidth; fill.style.animation='';let box=document.getElementById('confettiBox'); box.innerHTML='';let colors=['#f59e0b','#22c55e','#3b82f6','#ef4444','#eab308','#a78bfa','#fff'];for(let i=0;i<50;i++){let c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'%';c.style.background=colors[i%colors.length];c.style.animationDelay=(Math.random()*0.6)+'s';c.style.animationDuration=(1.6+Math.random()*1.2)+'s';box.appendChild(c);}setTimeout(()=>document.getElementById('step1').classList.add('done'),400);setTimeout(()=>document.getElementById('step2').classList.add('done'),900);setTimeout(()=>{document.getElementById('step3').classList.add('active');document.getElementById('step3').innerText='↻';},1400);setTimeout(()=>{document.getElementById('step3').classList.remove('active');document.getElementById('step3').classList.add('done');document.getElementById('step3').innerText='✓';document.getElementById('step4').classList.add('done');},1900);if(navigator.vibrate) navigator.vibrate([100,50,100]);}
+function hapusRiwayat(id){orders=orders.filter(o=>o.id!==id);localStorage.setItem('orders_user',JSON.stringify(orders));renderRiwayat();renderHome();showToast('Pesanan dihapus','info');}
+function hapusSemuaRiwayat(){let u=currentUser?currentUser.user:'tamu';let my=orders.filter(o=>o.user==u);if(!my.length){showToast('Riwayat sudah kosong!','info');return;}orders=orders.filter(o=>o.user!==u);localStorage.setItem('orders_user',JSON.stringify(orders));renderRiwayat();renderHome();showToast('Semua riwayat dihapus','success');}
+function renderRiwayat(){let u=currentUser?currentUser.user:'tamu';let my=orders.filter(o=>o.user==u);if(!my.length){document.getElementById('riwayat').innerHTML='Belum ada pesanan.';return;}document.getElementById('riwayat').innerHTML=my.slice().reverse().map(o=>`<div class="flex" style="padding:10px;border-bottom:1px solid #333"><span><b>${o.game} - ${o.nominal}</b><br>${o.id} | ${o.idGame} | ${o.bayar}</span><span><b>Rp ${o.harga.toLocaleString('id-ID')}</b><br><button class="btn btn-blue" style="width:auto;padding:6px 10px;margin-top:5px" onclick="lihatSuksesLama('${o.id}')">Invoice ✅</button> <button class="btn btn-red" style="width:auto;padding:6px 10px;margin-top:5px" onclick="hapusRiwayat('${o.id}')">🗑️</button></span></div>`).join('');}
+function lihatSuksesLama(id){let o=orders.find(x=>x.id==id);if(!o)return;isiSukses(o);showPage('page-sukses');}
+renderHome();
+</script>
+</body>
+</html>)">🗑️</button></span></div>`).join('');}
+function lihatSuksesLama(id){let o=orders.find(x=>x.id==id);if(!o)return;isiSukses(o);showPage('page-sukses');}
+renderHome();
+</script>
+</body>
+</html>
